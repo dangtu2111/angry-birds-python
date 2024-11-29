@@ -7,12 +7,14 @@ current_path = os.getcwd()
 import pymunk as pm
 from characters import Bird
 from level import Level
-
+SCREEN_WIDTH= 1200
+SCREEN_HEIGHT=650
+song1 = './resources/sounds/angry-birds.ogg'
 class GameResources:
     """Manages game assets and resources"""
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((1200, 650))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.redbird = pygame.image.load(
             "./resources/images/red-bird3.png").convert_alpha()
         self.bird_image=[
@@ -88,7 +90,7 @@ class GameResources:
         self.WHITE = (255, 255, 255)
         self.sling_x, self.sling_y = 135, 450
         self.sling2_x, self.sling2_y = 160, 450
-        self.score = 0
+        self.score = 60000
         self.game_state = 0
         self.bird_path = []
         self.counter = 0
@@ -106,12 +108,12 @@ class GameResources:
         self.static_lines = [pm.Segment(self.static_body, (0.0, 060.0), (1200.0, 060.0), 0.0)]
         self.static_lines1 = [pm.Segment(self.static_body, (1200.0, 060.0), (1200.0, 800.0), 0.0)]
         for line in self.static_lines:
-            line.elasticity = 0.95
-            line.friction = 1
+            line.elasticity = 0.9
+            line.friction = 0.95
             line.collision_type = 3
         for line in self.static_lines1:
-            line.elasticity = 0.95
-            line.friction = 1
+            line.elasticity = 0.5
+            line.friction = 0.95
             line.collision_type = 3
         self.space.add(self.static_body)
         for line in self.static_lines:
@@ -193,7 +195,6 @@ class Sling:
 
 def load_music():
     """Load the music"""
-    song1 = './resources/sounds/angry-birds.ogg'
     pygame.mixer.music.load(song1)
     pygame.mixer.music.play(-1)
 
@@ -282,20 +283,19 @@ class GameObjectManager:
         p = to_pygame(bird_body.position)
         p2 = to_pygame(pig_body.position)
         r = 30
-        pygame.draw.circle(surface, self.resource.BLACK, p, r, 4)
-        pygame.draw.circle(surface, self.resource.RED, p2, r, 4)
         pigs_to_remove = []
-        for pig in self.resource.pigs:
-            if pig_body == pig.body:
-                pig.life -= 20
-                if pig.life <=0:
+        if arbiter.total_impulse.length > 700:
+            for pig in self.resource.pigs:
+                if pig_body == pig.body:
+                    pig.life -= 20
+                    if pig.life <=0:
 
-                    pigs_to_remove.append(pig)
-                global score
-                self.resource.score += 10000
-        for pig in pigs_to_remove:
-            self.resource.space.remove(pig.shape, pig.shape.body)
-            self.resource.pigs.remove(pig)
+                        pigs_to_remove.append(pig)
+                    global score
+                    self.resource.score += 10000
+            for pig in pigs_to_remove:
+                self.resource.space.remove(pig.shape, pig.shape.body)
+                self.resource.pigs.remove(pig)
 
 
     def post_solve_bird_wood(self,arbiter, space, _):
@@ -328,7 +328,7 @@ class GameObjectManager:
             pig_shape, wood_shape = arbiter.shapes
             for pig in self.resource.pigs:
                 if pig_shape == pig.shape:
-                    pig.life -= 20
+                    pig.life -= 10
                     global score
                     self.resource.score += 10000
                     if pig.life <= 0:
@@ -357,7 +357,7 @@ class AngryBirdsGame:
         self.resource.space.add_collision_handler(0, 2).post_solve=self.object.post_solve_bird_wood
         # pig and wood
         self.resource.space.add_collision_handler(1, 2).post_solve=self.object.post_solve_pig_wood
-        load_music()
+        # load_music()
         
         self.resource.level.number = 0
         self.resource.level.load_level()
@@ -404,12 +404,12 @@ class AngryBirdsGame:
                 
                 if self.resource.level.number_of_birds > 0:
                     self.resource.level.number_of_birds -= 1
+                    self.resource.score= self.resource.score-10000
                     self.resource.t1 = time.time()*1000
                     xo = 154
                     yo = 156
                     # Lấy hình ảnh theo chỉ mục
-                    
-                    bird_image = self.resource.bird_image[len(self.resource.birds)]
+                    bird_image = self.resource.bird_image[abs(len(self.resource.bird_image)-1-self.resource.level.number_of_birds)]
                     if self.resource.mouse_distance > self.resource.rope_lenght:
                         self.resource.mouse_distance = self.resource.rope_lenght
                     if self.resource.x_mouse < self.resource.sling_x+5:
@@ -419,7 +419,6 @@ class AngryBirdsGame:
                         bird = Bird(-self.resource.mouse_distance, self.resource.angle, xo, yo, self.resource.space, bird_image)
                         self.resource.birds.append(bird)
                     if self.resource.level.number_of_birds == 0:
-
                         self.resource.t2 = time.time()
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 if (self.resource.x_mouse < 60 and self.resource.y_mouse < 155 and self.resource.y_mouse > 90):
@@ -441,7 +440,7 @@ class AngryBirdsGame:
                         self.resource.level.load_level()
                         self.resource.game_state = 0
                         self.resource.bird_path = []
-                        self.resource.score = 0
+                        self.resource.score = 60000
                 if self.resource.game_state == 4:
                     # Build next level
                     if self.resource.x_mouse > 610 and self.resource.y_mouse > 450:
@@ -449,7 +448,7 @@ class AngryBirdsGame:
                         self.resource.level.number += 1
                         self.resource.game_state = 0
                         self.resource.level.load_level()
-                        self.resource.score = 0
+                        self.resource.score = 60000
                         self.resource.bird_path = []
                         self.resource.bonus_score_once = True
                     if self.resource.x_mouse < 610 and self.resource.x_mouse > 500 and self.resource.y_mouse > 450:
@@ -473,7 +472,7 @@ class AngryBirdsGame:
         self.resource.screen.blit(self.resource.sling_image, (138, 420), self.resource.rect)
         # Draw the trail left behind
         for point in self.resource.bird_path:
-            pygame.draw.circle(self.resource.screen, self.resource.WHITE, point, 3, 0)
+            pygame.draw.circle(self.resource.screen, self.resource.WHITE, point, 1, 0)
         # Draw the self.resource.birds in the wait line
         if self.resource.level.number_of_birds > 0:
             for i in range(self.resource.level.number_of_birds-1):
@@ -494,6 +493,16 @@ class AngryBirdsGame:
         self.resource.counter += 1
         # Draw self.resource.birds
         for bird in self.resource.birds:
+            x, y = bird.body.position 
+            
+            if y<=73:
+                if bird.body.velocity.x< 70:
+                    if bird.body.velocity.y< 40:
+                        if bird.body.velocity.x < 1 and bird.body.velocity.y<0.4:
+                            bird.body.velocity = pm.Vec2d(0,0)  # Chỉ thay đổi trục x
+
+                        friction_factor = 0.99  # Hệ số giảm vận tốc, gần 1 để giảm từ từ
+                        bird.body.velocity *= friction_factor  
 
             if bird.shape.body.position.y < 0 :
                 self.resource.birds_to_remove.append(bird)
@@ -502,8 +511,8 @@ class AngryBirdsGame:
             x -= 22
             y -= 20
             self.resource.screen.blit(bird.image, (x, y))
-            pygame.draw.circle(self.resource.screen, self.resource.BLUE,
-                            p, int(bird.shape.radius), 1)
+            # pygame.draw.circle(self.resource.screen, self.resource.BLUE,
+            #                 p, int(bird.shape.radius), 1)
             if self.resource.counter >= 3 and time.time() - self.resource.t1 < 5:
                 self.resource.bird_path.append(p)
                 self.resource.restart_counter = True
@@ -514,9 +523,7 @@ class AngryBirdsGame:
         for bird in self.resource.birds_to_remove:
             self.resource.space.remove(bird.shape, bird.shape.body)
             self.resource.birds.remove(bird)
-        for pig in pigs_to_remove:
-            self.resource.space.remove(pig.shape, pig.shape.body)
-            self.resource.pigs.remove(pig)
+        
         # Draw static lines
         for line in self.resource.static_lines:
             body = line.body
@@ -530,9 +537,10 @@ class AngryBirdsGame:
         for pig in self.resource.pigs:
             i += 1
             # print (i,pig.life)
-            pig = pig.shape
             if pig.body.position.y < 0:
                 pigs_to_remove.append(pig)
+            pig = pig.shape
+            
 
             p = to_pygame(pig.body.position)
             x, y = p
@@ -543,9 +551,16 @@ class AngryBirdsGame:
             x -= w*0.5
             y -= h*0.5
             self.resource.screen.blit(img, (x, y))
-            pygame.draw.circle(self.resource.screen, self.resource.BLUE, p, int(pig.radius), 2)
+            # pygame.draw.circle(self.resource.screen, self.resource.BLUE, p, int(pig.radius), 2)
+        for pig in pigs_to_remove:
+            # Kiểm tra xem pig có body không
+            if pig.body is None or pig.body not in self.resource.space.bodies:
+                pigs_to_remove.append(pig)
+            else:
+                self.resource.space.remove(pig.shape.body)
+                self.resource.pigs.remove(pig)
         # Draw columns and Beams
-        for column in self.resource.columns:
+        for column in self.resource.columns:    
             column.draw_poly('columns', self.resource.screen)
         for beam in self.resource.beams:
             beam.draw_poly('beams', self.resource.screen)

@@ -12,7 +12,21 @@ class GameStateManager():
         """Draw level cleared"""
         
         level_cleared = self.resource.font01.render("LEVEL CLEARED!", 1, self.resource.WHITE)
-        score_level_cleared = self.resource.bold_font2.render(str(self.resource.score), 1, self.resource.WHITE)
+        text_score = self.resource.font03.render("HIGHT SCORE!", 1, self.resource.WHITE)
+        score_level_cleared = self.resource.font02.render(str(self.resource.score), 1, self.resource.WHITE)
+        image = pygame.image.load("./resources/images/color.jpg")  # Đường dẫn tới ảnh của bạn
+        image = pygame.transform.scale(image, (400, 300))  # Đảm bảo ảnh đủ lớn để phủ lên văn bản
+        text_width, text_height = score_level_cleared.get_size()
+        # Tạo mask từ văn bản
+        text_mask = pygame.mask.from_surface(score_level_cleared)
+        text_image_surface = pygame.Surface((text_width, text_height), pygame.SRCALPHA)
+        # Áp dụng hình ảnh vào từng pixel hiển thị của văn bản
+        for x in range(text_width):
+            for y in range(text_height):
+                if text_mask.get_at((x, y)):
+                    # Lấy màu từ hình ảnh tại vị trí tương ứng
+                    color = image.get_at((x, y))
+                    text_image_surface.set_at((x, y), color)
         # if self.resource.level.number_of_birds >= 0 and len(self.resource.pigs) == 0 and len(self.resource.pigsBoss)==0:
         if True:
             if self.resource.bonus_score_once:
@@ -46,7 +60,10 @@ class GameStateManager():
             else:
                 self.resource.screen.blit(self.resource.scaled_false_score, (485, 150))
 
-            self.resource.screen.blit(score_level_cleared, (550, 400))
+            self.resource.screen.blit(text_image_surface, (500, 350))
+            self.resource.screen.blit(text_score, (550, 420))
+            scaled_surface = pygame.transform.scale(self.resource.smile, (100, 100))
+            self.resource.screen.blit(scaled_surface, (800, 480))
             self.resource.screen.blit(self.resource.replay_button, (510, 480))
             self.resource.screen.blit(self.resource.next_button, (620, 480))
 

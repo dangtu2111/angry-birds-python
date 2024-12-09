@@ -14,8 +14,8 @@ class AngryBirds:
     """Main game class that coordinates all game components"""
     def __init__(self,song):
         pygame.init()
-        pygame.mixer.music.load(song)
-        pygame.mixer.music.play(-1)
+        # pygame.mixer.music.load(song)
+        # pygame.mixer.music.play(-1)
         logo=pygame.image.load("./resources/images/logo.png")
         pygame.display.set_icon(logo)
         pygame.display.set_caption("Angry Bird")

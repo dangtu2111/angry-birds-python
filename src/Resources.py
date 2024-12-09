@@ -49,6 +49,8 @@ class GameResources:
             "./resources/images/pig_failed.png").convert_alpha()
         self.stars = pygame.image.load(
             "./resources/images/stars-edited.png").convert_alpha()
+        self.smile = pygame.image.load(
+            "./resources/images/smile01.png").convert_alpha()
         self.rect = pygame.Rect(0, 0, 200, 200)
         self.star1 = self.stars.subsurface(self.rect).copy()
         self.rect = pygame.Rect(204, 0, 200, 200)
@@ -101,6 +103,8 @@ class GameResources:
         font_path = "./resources/font/feast_of_flesh_bb/FEASFBI_.TTF"  # Đường dẫn tới tệp font (nếu có)
        
         self.font01 = pygame.font.Font(font_path, 50) 
+        self.font03 = pygame.font.Font(font_path, 20) 
+        self.font02 = pygame.font.Font("./resources/font/popcorn.ttf",50) 
         self.bold_font = pygame.font.SysFont("arial", 30, bold=True)
         self.bold_font2 = pygame.font.SysFont("arial", 40, bold=True)
         self.bold_font3 = pygame.font.SysFont("arial", 50, bold=True)

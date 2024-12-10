@@ -12,14 +12,14 @@ from Resources import GameResources
 
 class AngryBirds:
     """Main game class that coordinates all game components"""
-    def __init__(self,song):
-        pygame.init()
+    def __init__(self,song,resource):
+        
         # pygame.mixer.music.load(song)
         # pygame.mixer.music.play(-1)
         logo=pygame.image.load("./resources/images/logo.png")
         pygame.display.set_icon(logo)
         pygame.display.set_caption("Angry Bird")
-        self.resource = GameResources()
+        self.resource = resource
         self.state = GameStateManager(self.resource) 
         self.object= GameObjectManager(self.resource)
         self.sling= GameSling(self.resource)
@@ -212,7 +212,10 @@ class AngryBirds:
             p2 = self.to_pygame(pv2)
             pygame.draw.lines(self.resource.screen, (150, 150, 150), False, [p1, p2])
         
-        
+        for explosion in self.resource.explosions:  # Duyệt qua danh sách
+            explosion.update()  # Cập nhật trạng thái hiệu ứng
+            if explosion.finished:  # Nếu hiệu ứng hoàn tất
+                self.resource.explosions.remove(explosion)  # Xóa khỏi danh sách
         i = 0
         pigsBoss_to_remove=[]
         # Draw pigsBoss

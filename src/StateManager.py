@@ -27,8 +27,7 @@ class GameStateManager():
                     # Lấy màu từ hình ảnh tại vị trí tương ứng
                     color = image.get_at((x, y))
                     text_image_surface.set_at((x, y), color)
-        # if self.resource.level.number_of_birds >= 0 and len(self.resource.pigs) == 0 and len(self.resource.pigsBoss)==0:
-        if True:
+        if self.resource.level.number_of_birds >= 0 and len(self.resource.pigs) == 0 and len(self.resource.pigsBoss)==0:
             if self.resource.bonus_score_once:
                 self.resource.score += (self.resource.level.number_of_birds-1) * 10000
             self.resource.bonus_score_once = False
@@ -45,23 +44,29 @@ class GameStateManager():
             pygame.draw.rect(self.resource.screen, self.resource.BLACK, rect)
             self.resource.screen.blit(level_cleared, (470, 70))
             if self.resource.score >= self.resource.level.one_star and self.resource.score <= self.resource.level.two_star:
-                self.resource.screen.blit(self.resource.star1, (310, 190))
+                self.resource.screen.blit(self.resource.star2, (500, 150))
+                self.resource.screen.blit(text_score, (550, 420))
+
                 self.resource.count_start=self.resource.count_start+1
             elif self.resource.score >= self.resource.level.two_star and self.resource.score <= self.resource.level.three_star:
                 self.resource.screen.blit(self.resource.star1, (310, 190))
-                self.resource.screen.blit(self.resource.star2, (500, 170))
+                self.resource.screen.blit(text_score, (550, 420))
+                self.resource.screen.blit(self.resource.star2, (500, 150))
                 self.resource.count_start=self.resource.count_start+2
-            # elif self.resource.score >= self.resource.level.three_star:
-            if True:
+            elif self.resource.score >= self.resource.level.three_star:
                 self.resource.screen.blit(self.resource.star1, (310, 150))
                 self.resource.screen.blit(self.resource.star2, (500, 130))
                 self.resource.screen.blit(self.resource.star3, (700, 160))
+                self.resource.screen.blit(text_score, (550, 420))
+
                 self.resource.count_start=self.resource.count_start+3
             else:
                 self.resource.screen.blit(self.resource.scaled_false_score, (485, 150))
+                text_score = self.resource.font03.render("LOW SCORE!", 1, self.resource.WHITE)
+                self.resource.screen.blit(text_score, (550, 420))
+
 
             self.resource.screen.blit(text_image_surface, (500, 350))
-            self.resource.screen.blit(text_score, (550, 420))
             scaled_surface = pygame.transform.scale(self.resource.smile, (100, 100))
             self.resource.screen.blit(scaled_surface, (800, 480))
             self.resource.screen.blit(self.resource.replay_button, (510, 480))
@@ -70,7 +75,7 @@ class GameStateManager():
 
     def draw_level_failed(self):
         """Draw level failed"""
-        failed = self.resource.bold_font3.render("Level Failed", 1, self.resource.WHITE)
+        failed = self.resource.font01.render("Level Failed", 1, self.resource.WHITE)
         if self.resource.level.number_of_birds <= 0 and time.time() - self.resource.t2 > 5 and len(self.resource.pigs) > 0:
             self.game_state = 3
             rect = pygame.Rect(300, 0, 600, 800)

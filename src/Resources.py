@@ -22,6 +22,26 @@ class GameResources:
         new_width = int(original_width * scale_factor)
         new_height = int(original_height * scale_factor)
         self.scaled_false_score = pygame.transform.scale(false_score, (new_width, new_height))
+        self.explosions_images=[
+            pygame.image.load(
+            "./resources/images/boom/explosion4.png").convert_alpha(),
+            pygame.image.load(
+            "./resources/images/boom/explosion3.png").convert_alpha(),
+            pygame.image.load(
+            "./resources/images/boom/explosion1.png").convert_alpha(),
+            pygame.image.load(
+            "./resources/images/boom/explosion2.png").convert_alpha(),
+        ]
+        self.explosions1_images=[
+            pygame.image.load(
+            "./resources/images/boom/explosion4.png").convert_alpha(),
+            pygame.image.load(
+            "./resources/images/boom/explosion5.png").convert_alpha(),
+            pygame.image.load(
+            "./resources/images/boom/explosion6.png").convert_alpha(),
+            pygame.image.load(
+            "./resources/images/boom/explosion7.png").convert_alpha(),
+        ]
         self.bird_image=[
             pygame.image.load(
             "./resources/images/red-bird3.png").convert_alpha(),
@@ -78,6 +98,7 @@ class GameResources:
         self.beams = []
         self.columns = []
         self.poly_points = []
+        self.explosions=[]
         self.ball_number = 0
         self.polys_dict = {}
         self.mouse_distance = 0
@@ -94,13 +115,13 @@ class GameResources:
         self.BLUE = (0, 0, 255)
         self.BLACK = (0, 0, 0)
         self.WHITE = (255, 255, 255)
-        self.score = -60000
+        self.score = 60000
         self.bird_path = []
         self.counter = 0
         self.restart_counter = False
         self.bonus_score_once = True
         # Tải font (font mặc định hoặc từ tệp)
-        font_path = "./resources/font/feast_of_flesh_bb/FEASFBI_.TTF"  # Đường dẫn tới tệp font (nếu có)
+        font_path = "./resources/font/feast_of_flesh_bb/FEASFBI.TTF"  # Đường dẫn tới tệp font (nếu có)
        
         self.font01 = pygame.font.Font(font_path, 50) 
         self.font03 = pygame.font.Font(font_path, 20) 

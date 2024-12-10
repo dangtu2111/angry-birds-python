@@ -21,9 +21,11 @@ class Bird():
         space.damping = 0.8  # Giảm tốc nhanh hơn
         shape.friction = 0.9
         shape.collision_type = 0
+        
         space.add(body, shape)
         self.body = body
         self.shape = shape
+        # self.shape.is_ghost = True 
         self.image = image
         
 

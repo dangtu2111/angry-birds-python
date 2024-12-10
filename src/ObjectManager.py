@@ -64,7 +64,7 @@ class GameObjectManager:
                     global score
                     self.resource.score += 10000
             position = b.body.position
-            explosion = Explosion(position, self.resource.screen, self.resource.explosions1_images)
+            explosion = Explosion(position, self.resource.screen, self.resource.explosions_images)
             self.resource.explosions.append(explosion)  # Lưu vào danh sách hiệu ứng
             for pig in pigs_to_remove:
                 self.resource.space.remove(pig.shape, pig.shape.body)
@@ -118,6 +118,7 @@ class GameObjectManager:
             self.resource.space.remove(b, b.body)
             global score
             self.resource.score += 5000
+        # return False  # Trả về False để không có tác động sau va chạm
 
 
     def post_solve_pig_wood(self,arbiter, space, _):
@@ -132,6 +133,9 @@ class GameObjectManager:
                     self.resource.score += 10000
                     if pig.life <= 0:
                         pigs_to_remove.append(pig)
+                        position = pig_shape.body.position
+                        explosion = Explosion(position, self.resource.screen, self.resource.explosions_images)
+                        self.resource.explosions.append(explosion)  # Lưu vào danh sách hiệu ứng
         for pig in pigs_to_remove:
             self.resource.space.remove(pig.shape, pig.shape.body)
             self.resource.pigs.remove(pig)

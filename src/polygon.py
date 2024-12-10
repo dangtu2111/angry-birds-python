@@ -16,6 +16,7 @@ class Polygon():
         space.add(body, shape)
         self.body = body
         self.shape = shape
+        # self.shape.is_ghost = True
         wood = pygame.image.load("./resources/images/wood.png").convert_alpha()
         wood2 = pygame.image.load("./resources/images/wood2.png").convert_alpha()
         rect = pygame.Rect(251, 357, 86, 22)

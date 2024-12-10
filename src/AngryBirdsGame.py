@@ -3,7 +3,7 @@ import pymunk as pm
 import time
 import pygame
 
-from ObjectManager import GameObjectManager 
+from ObjectManager import Explosion, GameObjectManager 
 from StateManager import GameStateManager
 from Sling import GameSling
 from characters import Bird
@@ -31,6 +31,7 @@ class AngryBirds:
         self.resource.space.add_collision_handler(0, 1).post_solve=self.object.post_solve_bird_pig
         # bird and wood
         self.resource.space.add_collision_handler(0, 2).post_solve=self.object.post_solve_bird_wood
+        # self.resource.space.add_collision_handler(0, 2).begin=self.object.post_solve_bird_wood
         # pig and wood
         self.resource.space.add_collision_handler(1, 2).post_solve=self.object.post_solve_pig_wood
 
@@ -91,9 +92,20 @@ class AngryBirds:
                     if self.resource.x_mouse < self.sling.sling_x+5:
                         bird = Bird(self.resource.mouse_distance, self.resource.angle, xo, yo, self.resource.space,bird_image)
                         self.resource.birds.append(bird)
+                        
+                        if len(self.resource.birds)>1:
+                            position=self.resource.birds[0].body.position
+                            explosion = Explosion(position, self.resource.screen, self.resource.explosions1_images)
+                            self.resource.explosions.append(explosion)  # Lưu vào danh sách hiệu ứng
+                            self.resource.birds.pop(0)
                     else:
                         bird = Bird(-self.resource.mouse_distance, self.resource.angle, xo, yo, self.resource.space, bird_image)
                         self.resource.birds.append(bird)
+                        if len(self.resource.birds)>1:
+                            position=self.resource.birds[0].body.position
+                            explosion = Explosion(position, self.resource.screen, self.resource.explosions1_images)
+                            self.resource.explosions.append(explosion)  # Lưu vào danh sách hiệu ứng
+                            self.resource.birds.pop(0)
                     if self.resource.level.number_of_birds == 0:
                         self.resource.t2 = time.time()
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:

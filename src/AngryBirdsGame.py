@@ -14,8 +14,8 @@ class AngryBirds:
     """Main game class that coordinates all game components"""
     def __init__(self,song,resource):
         
-        # pygame.mixer.music.load(song)
-        # pygame.mixer.music.play(-1)
+        pygame.mixer.music.load(song)
+        pygame.mixer.music.play(-1)
         logo=pygame.image.load("./resources/images/logo.png")
         pygame.display.set_icon(logo)
         pygame.display.set_caption("Angry Bird")
@@ -38,7 +38,7 @@ class AngryBirds:
         self.resource.space.add_collision_handler(0, 3).post_solve=self.object.post_solve_bird_boss
         # load_music()
         
-        self.resource.level.number = 0
+        self.resource.level.number = 3
         self.resource.level.load_level()
         """Main game loop"""
         while self.running:
@@ -94,17 +94,17 @@ class AngryBirds:
                         self.resource.birds.append(bird)
                         
                         if len(self.resource.birds)>1:
-                            position=self.resource.birds[0].body.position
-                            explosion = Explosion(position, self.resource.screen, self.resource.explosions1_images)
-                            self.resource.explosions.append(explosion)  # Lưu vào danh sách hiệu ứng
+                            # position=self.resource.birds[0].body.position
+                            # explosion = Explosion(position, self.resource.screen, self.resource.explosions1_images)
+                            # self.resource.explosions.append(explosion)  # Lưu vào danh sách hiệu ứng
                             self.resource.birds.pop(0)
                     else:
                         bird = Bird(-self.resource.mouse_distance, self.resource.angle, xo, yo, self.resource.space, bird_image)
                         self.resource.birds.append(bird)
                         if len(self.resource.birds)>1:
-                            position=self.resource.birds[0].body.position
-                            explosion = Explosion(position, self.resource.screen, self.resource.explosions1_images)
-                            self.resource.explosions.append(explosion)  # Lưu vào danh sách hiệu ứng
+                            # position=self.resource.birds[0].body.position
+                            # explosion = Explosion(position, self.resource.screen, self.resource.explosions1_images)
+                            # self.resource.explosions.append(explosion)  # Lưu vào danh sách hiệu ứng
                             self.resource.birds.pop(0)
                     if self.resource.level.number_of_birds == 0:
                         self.resource.t2 = time.time()
